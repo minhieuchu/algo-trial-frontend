@@ -12,11 +12,17 @@
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-    "@mui/material": "^6.4.4",
+    "@mui/icons-material": "^6.4.5",
+    "@mui/material": "^6.4.5",
     "@mui/material-nextjs": "^6.4.3",
+    "@mui/x-date-pickers": "^7.27.0",
+    "axios": "^1.7.9",
+    "dayjs": "^1.11.13",
+    "formik": "^2.4.6",
     "next": "15.1.7",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
