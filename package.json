@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@date-io/date-fns": "1.x",
     "@emotion/cache": "^11.14.0",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
@@ -17,10 +18,14 @@
     "@mui/material-nextjs": "^6.4.3",
     "@mui/x-date-pickers": "^7.27.0",
     "axios": "^1.7.9",
+    "chart.js": "^4.4.8",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "date-fns": "^4.0.0-beta.1",
     "dayjs": "^1.11.13",
     "formik": "^2.4.6",
     "next": "15.1.7",
     "react": "^19.0.0",
+    "react-chartjs-2": "^5.3.0",
     "react-dom": "^19.0.0",
     "yup": "^1.6.1"
   },
