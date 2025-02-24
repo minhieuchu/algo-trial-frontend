@@ -135,7 +135,7 @@ const StockTradeChart = () => {
         },
         title: {
           display: true,
-          text: "Date",
+          text: "",
         },
       },
       y: {
@@ -200,7 +200,6 @@ const StockTradeChart = () => {
 
   return (
     <div style={{ width: "1200px", height: "600px" }}>
-      <h2>Stock Price with Trades and SMA</h2>
       {/* @ts-expect-error comment */}
       <Line data={chartData} options={options} />
     </div>

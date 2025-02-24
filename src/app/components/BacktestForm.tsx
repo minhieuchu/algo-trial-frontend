@@ -5,12 +5,23 @@ import { Field, Formik, useFormikContext } from "formik";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import * as Yup from "yup";
 
+import { DialogStyled } from "@/app/components/index.styles";
+import StockTradeChart from "@/app/components/StockTradeChart";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import apiInstance from "@/app/services/algotrialApi";
+import {
+  selectTicker,
+  setBacktestResult,
+  setTicker,
+  useAlgoTrialStore,
+} from "@/app/store/algoTrialStore";
 import { BacktestResult, StrategyParams } from "@/app/types";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
+import DialogTitle from "@mui/material/DialogTitle";
 import Divider from "@mui/material/Divider";
 import MenuItem from "@mui/material/MenuItem";
 import Stack from "@mui/material/Stack";
@@ -324,6 +335,8 @@ const InputForm = () => {
 
 export default function BacktestForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const ticker = useAlgoTrialStore(selectTicker);
   const initialValues = useMemo(
     (): FormFields => ({
       ticker: "",
@@ -341,56 +354,83 @@ export default function BacktestForm() {
     []
   );
 
+  const handleDialogClose = useCallback(() => {
+    setIsOpen(false);
+  }, []);
+
   const handleSubmit = useCallback(async (values: FormFields) => {
     setIsLoading(true);
+    setTicker(values["ticker"]);
     try {
-      const results = await apiInstance.post<BacktestResult>(
+      const { data } = await apiInstance.post<BacktestResult>(
         "backtests",
         values
       );
-      console.log("======= ", results);
+      setBacktestResult(data);
     } catch (error) {
       console.error(error);
     }
+    setIsOpen(true);
     setIsLoading(false);
   }, []);
 
   return (
-    <Box
-      component="form"
-      sx={{
-        width: "55rem",
-        margin: "auto",
-        display: "flex",
-        flexDirection: "column",
-        gap: 3,
-        padding: 3,
-        borderRadius: 2,
-      }}
-    >
-      <Typography
-        variant="h6"
-        textAlign="center"
-        sx={{ marginBottom: "1.5rem" }}
+    <>
+      <Box
+        component="form"
+        sx={{
+          width: "55rem",
+          margin: "auto",
+          display: "flex",
+          flexDirection: "column",
+          gap: 3,
+          padding: 3,
+          borderRadius: 2,
+        }}
       >
-        Backtest Strategy Parameters
-      </Typography>
+        <Typography
+          variant="h6"
+          textAlign="center"
+          sx={{ marginBottom: "1.5rem" }}
+        >
+          Backtest Strategy Parameters
+        </Typography>
 
-      <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-        validateOnMount
-      >
-        <InputForm />
-      </Formik>
-      <Backdrop
-        sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
-    </Box>
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+          validateOnMount
+        >
+          <InputForm />
+        </Formik>
+        <Backdrop
+          sx={(theme) => ({ color: "#fff", zIndex: theme.zIndex.drawer + 1 })}
+          open={isLoading}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </Box>
+
+      <DialogStyled onClose={handleDialogClose} open={isOpen}>
+        <DialogTitle sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
+          {ticker}
+        </DialogTitle>
+        <IconButton
+          aria-label="close"
+          onClick={handleDialogClose}
+          sx={(theme) => ({
+            position: "absolute",
+            right: "0.5rem",
+            top: "0.5rem",
+            color: theme.palette.grey[500],
+          })}
+        >
+          <CloseIcon />
+        </IconButton>
+        <StockTradeChart />
+      </DialogStyled>
+    </>
   );
 }
 
