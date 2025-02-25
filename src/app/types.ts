@@ -36,4 +36,14 @@ export type BacktestResult = {
   trade_list: TradeInfo[];
 };
 
+export type StockEntry = {
+  Open: number;
+  Close: number;
+  High: number;
+  Low: number;
+  Volume: number;
+};
+
+export type StockData = Record<string, StockEntry>;
+
 export type StrategyParams = SMACrossoverParams | RSIParams | BreakoutParams;

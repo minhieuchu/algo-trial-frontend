@@ -13,10 +13,11 @@ import apiInstance from "@/app/services/algotrialApi";
 import {
   selectTicker,
   setBacktestResult,
+  setStockData,
   setTicker,
   useAlgoTrialStore,
 } from "@/app/store/algoTrialStore";
-import { BacktestResult, StrategyParams } from "@/app/types";
+import { BacktestResult, StockData, StrategyParams } from "@/app/types";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -362,11 +363,12 @@ export default function BacktestForm() {
     setIsLoading(true);
     setTicker(values["ticker"]);
     try {
-      const { data } = await apiInstance.post<BacktestResult>(
-        "backtests",
-        values
-      );
-      setBacktestResult(data);
+      const { data } = await apiInstance.post<{
+        stock_data: StockData;
+        result: BacktestResult;
+      }>("backtests", values);
+      setStockData(data.stock_data);
+      setBacktestResult(data.result);
     } catch (error) {
       console.error(error);
     }

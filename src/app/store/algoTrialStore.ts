@@ -2,15 +2,17 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
 
-import { BacktestResult } from "@/app/types";
+import { BacktestResult, StockData } from "@/app/types";
 
 interface AlgoTrialState {
   ticker: string;
+  stockData: StockData | null;
   backtestResult: BacktestResult | null;
 }
 
 type Actions = {
   setTicker: (ticker: string) => void;
+  setStockData: (data: StockData) => void;
   setBacktestResult: (result: BacktestResult) => void;
 };
 
@@ -20,12 +22,16 @@ export const useAlgoTrialStore = create(
   persist(
     immer<AlgoTrialStoreType>((set) => ({
       ticker: "",
+      stockData: null,
       backtestResult: null,
 
-      // Actions
       setTicker: (ticker: string) =>
         set((state) => {
           state.ticker = ticker;
+        }),
+      setStockData: (data: StockData) =>
+        set((state) => {
+          state.stockData = data;
         }),
       setBacktestResult: (result: BacktestResult) => {
         set((state) => {
@@ -35,13 +41,15 @@ export const useAlgoTrialStore = create(
     })),
     {
       name: "BacktestStorage",
-      version: 0, // Increase version when you update store
+      version: 0,
     }
   )
 );
 
 export const selectTicker = (state: AlgoTrialState) => state.ticker;
+export const selectStockData = (state: AlgoTrialState) => state.stockData;
 export const selectBacktestResult = (state: AlgoTrialState) =>
   state.backtestResult;
 
-export const { setTicker, setBacktestResult } = useAlgoTrialStore.getState();
+export const { setTicker, setStockData, setBacktestResult } =
+  useAlgoTrialStore.getState();
