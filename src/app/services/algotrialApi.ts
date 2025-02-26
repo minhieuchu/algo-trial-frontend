@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios';
 
 const apiInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -6,7 +6,6 @@ const apiInstance = axios.create({
     "Content-Type": "application/json",
   },
   timeout: 5000,
-  withCredentials: true,
 });
 
 apiInstance.interceptors.response.use(
@@ -18,7 +17,7 @@ apiInstance.interceptors.response.use(
         window.location.href = "/login";
       }
     }
-    return Promise.reject(error);
+    return Promise.reject(new Error("Network Error"));
   }
 );
 

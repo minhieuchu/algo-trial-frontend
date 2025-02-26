@@ -1,25 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import "chartjs-adapter-date-fns";
+import 'chartjs-adapter-date-fns';
 
 import {
-  Chart as ChartJS,
-  Legend,
-  LinearScale,
-  LineElement,
-  PointElement,
-  TimeScale,
-  Tooltip,
-} from "chart.js";
-import { useMemo } from "react";
-import { Line } from "react-chartjs-2";
+    Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, TimeScale, Tooltip
+} from 'chart.js';
+import { useMemo } from 'react';
+import { Line } from 'react-chartjs-2';
 
 import {
-  selectBacktestResult,
-  selectStockData,
-  selectTicker,
-  useAlgoTrialStore,
-} from "@/app/store/algoTrialStore";
+    selectBacktestParams, selectBacktestResult, selectStockData, useAlgoTrialStore
+} from '@/app/store/algoTrialStore';
 
 ChartJS.register(
   LineElement,
@@ -31,7 +22,7 @@ ChartJS.register(
 );
 
 const StockTradeChart = () => {
-  const ticker = useAlgoTrialStore(selectTicker);
+  const backtestParams = useAlgoTrialStore(selectBacktestParams);
   const stockData = useAlgoTrialStore(selectStockData);
   const backtestResult = useAlgoTrialStore(selectBacktestResult);
 
@@ -78,7 +69,7 @@ const StockTradeChart = () => {
     () => ({
       datasets: [
         {
-          label: ticker,
+          label: backtestParams?.ticker ?? "",
           data: Object.entries(stockData ?? []).map((item) => ({
             x: new Date(parseInt(item[0], 10)),
             y: item[1].Open,
@@ -124,7 +115,7 @@ const StockTradeChart = () => {
         },
       ],
     }),
-    [ticker, stockData, buyTrades, sellTrades]
+    [stockData, buyTrades, sellTrades, backtestParams]
   );
 
   const options = useMemo(

@@ -1,68 +1,31 @@
 "use client";
 
-import dayjs from "dayjs";
-import { Field, Formik, useFormikContext } from "formik";
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
-import * as Yup from "yup";
+import dayjs from 'dayjs';
+import { Field, Formik, useFormikContext } from 'formik';
+import { ChangeEvent, useCallback, useMemo, useState } from 'react';
+import * as Yup from 'yup';
 
-import { DialogStyled } from "@/app/components/index.styles";
-import StockTradeChart from "@/app/components/StockTradeChart";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
-import apiInstance from "@/app/services/algotrialApi";
-import {
-  selectTicker,
-  setBacktestResult,
-  setStockData,
-  setTicker,
-  useAlgoTrialStore,
-} from "@/app/store/algoTrialStore";
-import { BacktestResult, StockData, StrategyParams } from "@/app/types";
-import Backdrop from "@mui/material/Backdrop";
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogTitle from "@mui/material/DialogTitle";
-import Divider from "@mui/material/Divider";
-import MenuItem from "@mui/material/MenuItem";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import Typography from "@mui/material/Typography";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-
-const positionSizings = {
-  fixed: "Fixed",
-  percentage: "Percentage of Capital",
-};
-
-const strategies = {
-  SMACrossover: "Simple Moving Average Crossover",
-  Breakout: "Breakout",
-  RSI: "Relative Strength Index",
-};
-
-type PositionSizing = keyof typeof positionSizings;
-type Strategy = keyof typeof strategies;
-
-interface FormFields {
-  ticker: string;
-  start_time: number;
-  end_time: number;
-  initial_capital: number;
-  risk_free_rate: number;
-  strategy: Strategy;
-  strategy_params: StrategyParams;
-  position_sizing: {
-    type: PositionSizing;
-    value: number;
-  };
-}
+import StockTradeDialog from '@/app/components/dialogs/StockTradeDialog';
+import { POSITION_SIZINGS, STRATEGIES } from '@/app/constants';
+import apiInstance from '@/app/services/algotrialApi';
+import { setBacktestParams, setBacktestResult, setStockData } from '@/app/store/algoTrialStore';
+import { BacktestParams, BacktestResult, PositionSizing, StockData, Strategy } from '@/app/types';
+import Backdrop from '@mui/material/Backdrop';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Divider from '@mui/material/Divider';
+import MenuItem from '@mui/material/MenuItem';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 
 const validationSchema = Yup.object({
-  strategy: Yup.string().oneOf(Object.keys(strategies)).required(),
+  strategy: Yup.string().oneOf(Object.keys(STRATEGIES)).required(),
   ticker: Yup.string()
     .required()
     .test("length", (val) => val.length > 0),
@@ -79,7 +42,7 @@ const validationSchema = Yup.object({
     .max(100, "Risk-Free Rate cannot exceed 100%")
     .required(),
   position_sizing: Yup.object({
-    type: Yup.string().oneOf(Object.keys(positionSizings)).required(),
+    type: Yup.string().oneOf(Object.keys(POSITION_SIZINGS)).required(),
     value: Yup.number().min(0).required(),
   }),
 });
@@ -90,10 +53,10 @@ const InputForm = () => {
     submitForm: onSubmit,
     errors,
     setFieldValue,
-  } = useFormikContext<FormFields>();
+  } = useFormikContext<BacktestParams>();
 
   const handleDateChange = useCallback(
-    (field: keyof FormFields) => (value: number) => {
+    (field: keyof BacktestParams) => (value: number) => {
       setFieldValue(field, value);
     },
     [setFieldValue]
@@ -193,7 +156,7 @@ const InputForm = () => {
         sx={{ width: "calc(50% - 1rem)" }}
         onChange={handleStrategyChange}
       >
-        {Object.entries(strategies).map((strategy) => {
+        {Object.entries(STRATEGIES).map((strategy) => {
           const [key, value] = strategy;
           return (
             <MenuItem key={key} value={key}>
@@ -280,7 +243,7 @@ const InputForm = () => {
           onChange={handlePositionSizingChange}
           sx={{ width: "calc(50% - 1rem)" }}
         >
-          {Object.entries(positionSizings).map((positionSizing) => {
+          {Object.entries(POSITION_SIZINGS).map((positionSizing) => {
             const [key, value] = positionSizing;
             return (
               <MenuItem key={key} value={key}>
@@ -337,9 +300,8 @@ const InputForm = () => {
 export default function BacktestForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const ticker = useAlgoTrialStore(selectTicker);
   const initialValues = useMemo(
-    (): FormFields => ({
+    (): BacktestParams => ({
       ticker: "",
       start_time: 0,
       end_time: 0,
@@ -359,9 +321,9 @@ export default function BacktestForm() {
     setIsOpen(false);
   }, []);
 
-  const handleSubmit = useCallback(async (values: FormFields) => {
+  const handleSubmit = useCallback(async (values: BacktestParams) => {
     setIsLoading(true);
-    setTicker(values["ticker"]);
+    setBacktestParams(values);
     try {
       const { data } = await apiInstance.post<{
         stock_data: StockData;
@@ -414,24 +376,7 @@ export default function BacktestForm() {
         </Backdrop>
       </Box>
 
-      <DialogStyled onClose={handleDialogClose} open={isOpen}>
-        <DialogTitle sx={{ fontWeight: 600, fontSize: "1.5rem" }}>
-          {ticker}
-        </DialogTitle>
-        <IconButton
-          aria-label="close"
-          onClick={handleDialogClose}
-          sx={(theme) => ({
-            position: "absolute",
-            right: "0.5rem",
-            top: "0.5rem",
-            color: theme.palette.grey[500],
-          })}
-        >
-          <CloseIcon />
-        </IconButton>
-        <StockTradeChart />
-      </DialogStyled>
+      <StockTradeDialog onClose={handleDialogClose} isOpen={isOpen} />
     </>
   );
 }
@@ -441,7 +386,10 @@ interface CustomDatePickerProps {
   onChange: (value: number) => void;
 }
 
-function CustomDatePicker({ label, onChange }: CustomDatePickerProps) {
+function CustomDatePicker({
+  label,
+  onChange,
+}: Readonly<CustomDatePickerProps>) {
   const onDateChange = useCallback(
     (value: dayjs.Dayjs | null) => {
       onChange(value?.unix() ?? 0);

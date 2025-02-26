@@ -1,3 +1,5 @@
+import { POSITION_SIZINGS, STRATEGIES } from '@/app/constants';
+
 export type SMACrossoverParams = {
   fast_sma_period: number;
   slow_sma_period: number;
@@ -14,6 +16,7 @@ export type BreakoutParams = {
 };
 
 export type TradeInfo = {
+  ref: number;
   commission: number;
   dtclose: number;
   dtopen: number;
@@ -47,3 +50,21 @@ export type StockEntry = {
 export type StockData = Record<string, StockEntry>;
 
 export type StrategyParams = SMACrossoverParams | RSIParams | BreakoutParams;
+
+export type PositionSizing = keyof typeof POSITION_SIZINGS;
+
+export type Strategy = keyof typeof STRATEGIES;
+
+export type BacktestParams = {
+  ticker: string;
+  start_time: number;
+  end_time: number;
+  initial_capital: number;
+  risk_free_rate: number;
+  strategy: Strategy;
+  strategy_params: StrategyParams;
+  position_sizing: {
+    type: PositionSizing;
+    value: number;
+  };
+};
