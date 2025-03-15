@@ -79,20 +79,34 @@ const InputForm = () => {
 
       if (strategy == "SMACrossover") {
         setFieldValue("strategy_params", {
-          fast_sma_period: 0,
-          slow_sma_period: 1,
+          fast_sma_period: 15,
+          slow_sma_period: 30,
+        });
+      }
+      if (strategy == "VolumeWeighted") {
+        setFieldValue("strategy_params", {
+          vwap_period: 20,
+          volume_period: 5,
+          volume_multiplier: 1.5,
+        });
+      }
+      if (strategy == "Momentum") {
+        setFieldValue("strategy_params", {
+          period: 14,
+          threshold: 0,
+          lookback: 5,
         });
       }
       if (strategy == "RSI") {
         setFieldValue("strategy_params", {
-          rsi_period: 1,
-          rsi_low: 0,
-          rsi_high: 1,
+          rsi_period: 14,
+          rsi_low: 30,
+          rsi_high: 70,
         });
       }
       if (strategy == "Breakout") {
         setFieldValue("strategy_params", {
-          lookback: 0,
+          lookback: 20,
         });
       }
     },
@@ -105,10 +119,10 @@ const InputForm = () => {
       setFieldValue("position_sizing.type", positionSizing);
 
       if (positionSizing == "fixed") {
-        setFieldValue("position_sizing.value", 1000);
+        setFieldValue("position_sizing.value", 10000);
       }
       if (positionSizing == "percentage") {
-        setFieldValue("position_sizing.value", 10);
+        setFieldValue("position_sizing.value", 30);
       }
     },
     [setFieldValue]
@@ -196,6 +210,70 @@ const InputForm = () => {
             sx={{ flexGrow: 1 }}
           />
         </Stack>
+      )}
+
+      {values["strategy"] == "Momentum" && (
+        <>
+          <Stack direction={"row"} gap={"2rem"}>
+            <Field
+              as={TextField}
+              size="small"
+              label="Period"
+              name="strategy_params.period"
+              type="number"
+              sx={{ flexGrow: 1 }}
+            />
+
+            <Field
+              as={TextField}
+              size="small"
+              label="Threshold"
+              name="strategy_params.threshold"
+              type="number"
+              sx={{ flexGrow: 1 }}
+            />
+          </Stack>
+          <Field
+            as={TextField}
+            size="small"
+            label="Lookback"
+            name="strategy_params.lookback"
+            type="number"
+            sx={{ width: "calc(50% - 1rem)" }}
+          />
+        </>
+      )}
+
+      {values["strategy"] == "VolumeWeighted" && (
+        <>
+          <Stack direction={"row"} gap={"2rem"}>
+            <Field
+              as={TextField}
+              size="small"
+              label="Volume Weighted Average Price Period"
+              name="strategy_params.vwap_period"
+              type="number"
+              sx={{ flexGrow: 1 }}
+            />
+
+            <Field
+              as={TextField}
+              size="small"
+              label="Volume Period"
+              name="strategy_params.volume_period"
+              type="number"
+              sx={{ flexGrow: 1 }}
+            />
+          </Stack>
+          <Field
+            as={TextField}
+            size="small"
+            label="Volume Multiplier"
+            name="strategy_params.volume_multiplier"
+            type="number"
+            sx={{ width: "calc(50% - 1rem)" }}
+          />
+        </>
       )}
 
       {values["strategy"] == "RSI" && (
@@ -315,13 +393,13 @@ export default function BacktestForm() {
       ticker: "",
       start_time: 0,
       end_time: 0,
-      initial_capital: 1000,
+      initial_capital: 10000,
       risk_free_rate: 0,
       strategy: "SMACrossover",
-      strategy_params: { fast_sma_period: 0, slow_sma_period: 1 },
+      strategy_params: { fast_sma_period: 15, slow_sma_period: 30 },
       position_sizing: {
         type: "fixed",
-        value: 1000,
+        value: 10000,
       },
     }),
     []

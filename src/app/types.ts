@@ -5,6 +5,18 @@ export type SMACrossoverParams = {
   slow_sma_period: number;
 };
 
+export type MomentumParams = {
+  period: number;
+  threshold: number;
+  lookback: number;
+};
+
+export type VolumeWeightedParams = {
+  vwap_period: number;
+  volume_period: number;
+  volume_multiplier: number;
+};
+
 export type RSIParams = {
   rsi_period: number;
   rsi_low: number;
@@ -49,7 +61,12 @@ export type StockEntry = {
 
 export type StockData = Record<string, StockEntry>;
 
-export type StrategyParams = SMACrossoverParams | RSIParams | BreakoutParams;
+export type StrategyParams =
+  | SMACrossoverParams
+  | VolumeWeightedParams
+  | MomentumParams
+  | RSIParams
+  | BreakoutParams;
 
 export type PositionSizing = keyof typeof POSITION_SIZINGS;
 

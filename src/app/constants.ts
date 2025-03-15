@@ -5,6 +5,8 @@ export const POSITION_SIZINGS = {
 
 export const STRATEGIES = {
   SMACrossover: "Simple Moving Average Crossover",
+  VolumeWeighted: "Volume Weighted",
+  Momentum: "Momentum",
   Breakout: "Breakout",
   RSI: "Relative Strength Index",
 };
