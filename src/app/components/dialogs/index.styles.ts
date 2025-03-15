@@ -1,6 +1,6 @@
-import { styled } from '@mui/material';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
+import { styled } from "@mui/material";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
 
 export const DialogStyled = styled(Dialog)({
   ".MuiPaper-root[role='dialog']": {

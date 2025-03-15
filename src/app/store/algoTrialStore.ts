@@ -1,8 +1,8 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
-import { immer } from 'zustand/middleware/immer';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { immer } from "zustand/middleware/immer";
 
-import { BacktestParams, BacktestResult, StockData } from '@/app/types';
+import { BacktestParams, BacktestResult, StockData } from "@/app/types";
 
 interface AlgoTrialState {
   backtestParams: BacktestParams | null;

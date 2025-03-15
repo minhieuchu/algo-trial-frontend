@@ -1,28 +1,38 @@
 "use client";
 
-import dayjs from 'dayjs';
-import { Field, Formik, useFormikContext } from 'formik';
-import { ChangeEvent, useCallback, useMemo, useState } from 'react';
-import * as Yup from 'yup';
+import dayjs from "dayjs";
+import { Field, Formik, useFormikContext } from "formik";
+import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import * as Yup from "yup";
 
-import StockTradeDialog from '@/app/components/dialogs/StockTradeDialog';
-import { POSITION_SIZINGS, STRATEGIES } from '@/app/constants';
-import apiInstance from '@/app/services/algotrialApi';
-import { setBacktestParams, setBacktestResult, setStockData } from '@/app/store/algoTrialStore';
-import { BacktestParams, BacktestResult, PositionSizing, StockData, Strategy } from '@/app/types';
-import Backdrop from '@mui/material/Backdrop';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import CircularProgress from '@mui/material/CircularProgress';
-import Divider from '@mui/material/Divider';
-import MenuItem from '@mui/material/MenuItem';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import StockTradeDialog from "@/app/components/dialogs/StockTradeDialog";
+import { POSITION_SIZINGS, STRATEGIES } from "@/app/constants";
+import apiInstance from "@/app/services/algotrialApi";
+import {
+  setBacktestParams,
+  setBacktestResult,
+  setStockData,
+} from "@/app/store/algoTrialStore";
+import {
+  BacktestParams,
+  BacktestResult,
+  PositionSizing,
+  StockData,
+  Strategy,
+} from "@/app/types";
+import Backdrop from "@mui/material/Backdrop";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Divider from "@mui/material/Divider";
+import MenuItem from "@mui/material/MenuItem";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 
 const validationSchema = Yup.object({
   strategy: Yup.string().oneOf(Object.keys(STRATEGIES)).required(),

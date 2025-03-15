@@ -1,4 +1,4 @@
-import { POSITION_SIZINGS, STRATEGIES } from '@/app/constants';
+import { POSITION_SIZINGS, STRATEGIES } from "@/app/constants";
 
 export type SMACrossoverParams = {
   fast_sma_period: number;

@@ -1,17 +1,23 @@
 "use client";
 
-import { useCallback, useState } from 'react';
+import { useCallback, useState } from "react";
 
-import { DialogStyled, ResultDiv, ViewTradeButton } from '@/app/components/dialogs/index.styles';
-import TradeListDialog from '@/app/components/dialogs/TradeListDialog';
-import StockTradeChart from '@/app/components/StockTradeChart';
 import {
-    selectBacktestParams, selectBacktestResult, useAlgoTrialStore
-} from '@/app/store/algoTrialStore';
-import { formatUnixTimestamp } from '@/app/utils';
-import CloseIcon from '@mui/icons-material/Close';
-import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
+  DialogStyled,
+  ResultDiv,
+  ViewTradeButton,
+} from "@/app/components/dialogs/index.styles";
+import TradeListDialog from "@/app/components/dialogs/TradeListDialog";
+import StockTradeChart from "@/app/components/StockTradeChart";
+import {
+  selectBacktestParams,
+  selectBacktestResult,
+  useAlgoTrialStore,
+} from "@/app/store/algoTrialStore";
+import { formatUnixTimestamp } from "@/app/utils";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
 
 interface StockTradeDialogProps {
   isOpen: boolean;

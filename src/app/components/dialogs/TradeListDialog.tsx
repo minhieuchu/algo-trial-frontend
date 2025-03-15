@@ -1,21 +1,24 @@
 "use client";
 
-import { useMemo } from 'react';
+import { useMemo } from "react";
 
-import { DialogStyled } from '@/app/components/dialogs/index.styles';
-import { selectBacktestResult, useAlgoTrialStore } from '@/app/store/algoTrialStore';
-import { TradeInfo } from '@/app/types';
-import { formatUnixTimestamp } from '@/app/utils';
-import CloseIcon from '@mui/icons-material/Close';
-import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import { DialogStyled } from "@/app/components/dialogs/index.styles";
+import {
+  selectBacktestResult,
+  useAlgoTrialStore,
+} from "@/app/store/algoTrialStore";
+import { TradeInfo } from "@/app/types";
+import { formatUnixTimestamp } from "@/app/utils";
+import CloseIcon from "@mui/icons-material/Close";
+import DialogTitle from "@mui/material/DialogTitle";
+import IconButton from "@mui/material/IconButton";
+import Paper from "@mui/material/Paper";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 interface TradeListDialogProps {
   isOpen: boolean;

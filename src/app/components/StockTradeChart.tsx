@@ -1,16 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import 'chartjs-adapter-date-fns';
+import "chartjs-adapter-date-fns";
 
 import {
-    Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, TimeScale, Tooltip
-} from 'chart.js';
-import { useMemo } from 'react';
-import { Line } from 'react-chartjs-2';
+  Chart as ChartJS,
+  Legend,
+  LinearScale,
+  LineElement,
+  PointElement,
+  TimeScale,
+  Tooltip,
+} from "chart.js";
+import { useMemo } from "react";
+import { Line } from "react-chartjs-2";
 
 import {
-    selectBacktestParams, selectBacktestResult, selectStockData, useAlgoTrialStore
-} from '@/app/store/algoTrialStore';
+  selectBacktestParams,
+  selectBacktestResult,
+  selectStockData,
+  useAlgoTrialStore,
+} from "@/app/store/algoTrialStore";
 
 ChartJS.register(
   LineElement,
