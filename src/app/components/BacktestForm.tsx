@@ -374,6 +374,7 @@ const InputForm = () => {
         <Button
           variant="outlined"
           color="primary"
+          name="submit"
           sx={{ width: "fit-content" }}
           disabled={!!Object.keys(errors).length}
           onClick={onSubmit}
@@ -489,6 +490,7 @@ function CustomDatePicker({
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DemoContainer components={["DatePicker"]}>
         <DatePicker
+          name={"date-input"}
           sx={{ minWidth: "12rem !important", width: "12rem" }}
           label={label}
           slotProps={{
