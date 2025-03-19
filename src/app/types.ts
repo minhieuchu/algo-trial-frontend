@@ -47,7 +47,7 @@ export type BacktestResult = {
   max_drawdown: number;
   portfolio_cash: number;
   portfolio_value: number;
-  sharpe_ratio: number;
+  sharpe_ratio?: number;
   trade_list: TradeInfo[];
 };
 

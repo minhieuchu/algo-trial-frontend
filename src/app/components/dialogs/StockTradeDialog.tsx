@@ -76,7 +76,7 @@ export default function StockTradeDialog({
         </span>
         <span>
           {"Sharpe Ratio: "}
-          <span>{backtestResult.sharpe_ratio.toFixed(2)}</span>
+          <span>{backtestResult.sharpe_ratio?.toFixed(2)}</span>
         </span>
       </ResultDiv>
       <ViewTradeButton onClick={handleTradeListDialogOpen}>
