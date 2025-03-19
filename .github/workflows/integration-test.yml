@@ -1,6 +1,8 @@
 name: Integration Test
 run-name: Running Integration tests for Backtest Form
+
 on: [push]
+
 jobs:
   Run-Integration-Tests:
     runs-on: ubuntu-latest
