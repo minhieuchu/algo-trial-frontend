@@ -1,5 +1,7 @@
 FROM node:alpine AS build
 WORKDIR /app
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 COPY package.json yarn.lock ./
 RUN apk add --no-cache git \
     && yarn install --frozen-lockfile \
