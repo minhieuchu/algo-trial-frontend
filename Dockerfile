@@ -1,6 +1,20 @@
-FROM node:alpine
+FROM node:alpine AS build
 WORKDIR /app
 COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+RUN apk add --no-cache git \
+    && yarn install --frozen-lockfile \
+    && yarn cache clean
 COPY . .
-CMD ["yarn", "dev"]
+RUN yarn build \
+    && rm -rf node_modules \
+    && yarn install --production --frozen-lockfile --ignore-scripts --prefer-offline
+
+
+FROM node:alpine AS development
+WORKDIR /app
+COPY --from=build /app/package.json /app/yarn.lock ./
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
+
+CMD ["yarn", "start"]
