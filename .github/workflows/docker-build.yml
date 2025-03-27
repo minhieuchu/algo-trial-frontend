@@ -9,6 +9,11 @@ on:
 jobs:
   Build-and-Push:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env:
+          - { url: "http://localhost:8080/v1/", tag: "dev" }
+          # - { url: "https://api.yourdomain.com", tag: "prod" }
 
     steps:
       - name: Checkout Repository
@@ -18,9 +23,9 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build Docker Image
-        run: docker build -t algo-trial-frontend .
+        run: docker build -t algo-trial-frontend:${{ matrix.env.tag }} --build-arg NEXT_PUBLIC_API_URL="${{ matrix.env.url }}" .
 
       - name: Tag Latest and Push
         run: |
-          docker tag algo-trial-frontend minhieuchu/algo-trial:frontend
-          docker push minhieuchu/algo-trial:frontend
+          docker tag algo-trial-frontend:${{ matrix.env.tag }} minhieuchu/algo-trial:frontend-${{ matrix.env.tag }}
+          docker push minhieuchu/algo-trial:frontend-${{ matrix.env.tag }}
