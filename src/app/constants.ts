@@ -10,3 +10,6 @@ export const STRATEGIES = {
   Breakout: "Breakout",
   RSI: "Relative Strength Index",
 };
+
+export const BEARER_TOKEN_KEY = "BEARER_TOKEN_KEY";
+export const REFRESH_TOKEN_KEY = "REFRESH_TOKEN_KEY";

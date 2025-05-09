@@ -1,5 +1,11 @@
 import { POSITION_SIZINGS, STRATEGIES } from "@/app/constants";
 
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+};
+
 export type SMACrossoverParams = {
   fast_sma_period: number;
   slow_sma_period: number;

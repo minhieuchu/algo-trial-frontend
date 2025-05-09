@@ -1,3 +1,4 @@
+import { BEARER_TOKEN_KEY } from "@/app/constants";
 import axios from "axios";
 
 const apiInstance = axios.create({
@@ -6,6 +7,14 @@ const apiInstance = axios.create({
     "Content-Type": "application/json",
   },
   timeout: 5000,
+});
+
+apiInstance.interceptors.request.use((config) => {
+  const token = localStorage.getItem(BEARER_TOKEN_KEY);
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 apiInstance.interceptors.response.use(

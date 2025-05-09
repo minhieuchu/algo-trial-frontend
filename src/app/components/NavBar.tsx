@@ -1,36 +1,57 @@
 "use client";
 import { AxiosHeaders } from "axios";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
+import { BEARER_TOKEN_KEY } from "@/app/constants";
 import apiInstance from "@/app/services/algotrialApi";
+import {
+  selectUser,
+  setUser,
+  useAlgoTrialStore,
+} from "@/app/store/algoTrialStore";
 import ShowChartIcon from "@mui/icons-material/ShowChart";
 import { styled } from "@mui/material";
+import Button from "@mui/material/Button";
 import LinearProgress from "@mui/material/LinearProgress";
-
-const sample_user_id = "test_user";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
 
 type DownloadStatus = "pending" | "ready";
 
-export default function AppBar() {
+export default function NavBar() {
+  const router = useRouter();
+  const user = useAlgoTrialStore(selectUser);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleLogout = useCallback(() => {
+    localStorage.removeItem(BEARER_TOKEN_KEY);
+    setUser(null);
+    setAnchorEl(null);
+    router.push("/login");
+  }, [router]);
   const [websocketConnectStatus, setWebsocketConnectStatus] = useState(true);
   const [downloadStatus, setDownloadStatus] = useState<DownloadStatus | null>(
     null
   );
   const { lastMessage, readyState } = useWebSocket(
-    `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/report?user_id=${sample_user_id}`,
+    `${process.env.NEXT_PUBLIC_WEBSOCKET_URL}/report?user_id=${user?.id}`,
     undefined,
     websocketConnectStatus
   );
 
   const onDownloadClick = useCallback(() => {
-    apiInstance.get(`backtests/report?user_id=${sample_user_id}`);
-  }, []);
+    apiInstance.get(`backtests/report?user_id=${user?.id}`);
+  }, [user]);
 
   const downloadFile = useCallback(async () => {
     try {
       const response = await apiInstance.get(
-        `backtests/report/download?user_id=${sample_user_id}`
+        `backtests/report/download?user_id=${user?.id}`
       );
       if (response.status !== 200) {
         return;
@@ -43,7 +64,7 @@ export default function AppBar() {
       );
       const fileName = fileNameMatch
         ? fileNameMatch[1]
-        : `backtest_report_${sample_user_id}.csv`;
+        : `backtest_report_${user?.id}.csv`;
 
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
@@ -55,7 +76,7 @@ export default function AppBar() {
     } catch (e: unknown) {
       console.error(e);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (!lastMessage) {
@@ -76,8 +97,12 @@ export default function AppBar() {
     };
   }, []);
 
+  if (!user) {
+    return null;
+  }
+
   return (
-    <AppBarContainer>
+    <NavBarContainer>
       <div
         style={{
           width: "90rem",
@@ -99,7 +124,17 @@ export default function AppBar() {
           AlgoTrial
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <ButtonStyled>Login</ButtonStyled>
+          <Button onClick={handleClick}>{user!.name}</Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleLogout}
+            MenuListProps={{
+              "aria-labelledby": "basic-button",
+            }}
+          >
+            <MenuItem onClick={handleLogout}>Logout</MenuItem>
+          </Menu>
           <div style={{ position: "relative" }}>
             <ButtonStyled onClick={onDownloadClick}>Download</ButtonStyled>
             {readyState === ReadyState.OPEN && downloadStatus == "pending" && (
@@ -108,7 +143,7 @@ export default function AppBar() {
           </div>
         </div>
       </div>
-    </AppBarContainer>
+    </NavBarContainer>
   );
 }
 
@@ -121,14 +156,14 @@ const ButtonStyled = styled("div")({
   fontSize: "15px",
 });
 
-const AppBarContainer = styled("div")({
+const NavBarContainer = styled("div")({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   padding: "0.75rem 2rem",
 });
 
-export const LinearProgressStyled = styled(LinearProgress)({
+const LinearProgressStyled = styled(LinearProgress)({
   position: "absolute",
   bottom: "-0.5rem",
   left: 0,
