@@ -87,7 +87,7 @@ describe("Backtest Form Integration", () => {
   };
 
   beforeEach(() => {
-    cy.intercept("POST", "v1/backtests", mockResponse).as("backtestRequest");
+    cy.intercept("POST", "backtests", mockResponse).as("backtestRequest");
   });
 
   it("Submit form and display backtest results", () => {
@@ -102,8 +102,8 @@ describe("Backtest Form Integration", () => {
       const requestBody = interception.request.body;
       expect(requestBody).to.deep.equal({
         ticker: "AAPL",
-        start_time: 1647363600,
-        end_time: 1678899600,
+        start_time: Math.floor(new Date("2022.03.16").getTime() / 1000),
+        end_time: Math.floor(new Date("2023.03.16").getTime() / 1000),
         initial_capital: 10000,
         risk_free_rate: 0,
         strategy: "SMACrossover",

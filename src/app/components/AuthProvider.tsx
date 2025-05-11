@@ -31,6 +31,7 @@ export default function AuthProvider({
         await apiInstance.get("/auth/me");
       } catch (error) {
         setUser(null);
+        localStorage.removeItem(BEARER_TOKEN_KEY);
         console.error(error);
       }
     };

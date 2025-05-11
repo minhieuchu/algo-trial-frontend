@@ -25,15 +25,22 @@ export default function NavBar() {
   const user = useAlgoTrialStore(selectUser);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
+  const handleClose = useCallback(() => {
+    setAnchorEl(null);
+  }, []);
+
   const handleLogout = useCallback(() => {
     localStorage.removeItem(BEARER_TOKEN_KEY);
     setUser(null);
     setAnchorEl(null);
     router.push("/login");
   }, [router]);
+
   const [websocketConnectStatus, setWebsocketConnectStatus] = useState(true);
   const [downloadStatus, setDownloadStatus] = useState<DownloadStatus | null>(
     null
@@ -128,7 +135,7 @@ export default function NavBar() {
           <Menu
             anchorEl={anchorEl}
             open={open}
-            onClose={handleLogout}
+            onClose={handleClose}
             MenuListProps={{
               "aria-labelledby": "basic-button",
             }}
